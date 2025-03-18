@@ -59,7 +59,7 @@ export const properties: Property[] = [
   {
     id: '4',
     title: 'Country Estate with Vineyard',
-    description: 'Spectacular estate on 15 acres with a boutique vineyard. The main residence features timeless design, chef's kitchen, wine cellar, and expansive entertaining spaces that open to terraces overlooking the vineyard.',
+    description: 'Spectacular estate on 15 acres with a boutique vineyard. The main residence features timeless design, chef\'s kitchen, wine cellar, and expansive entertaining spaces that open to terraces overlooking the vineyard.',
     price: 8900000,
     location: 'Napa Valley, CA',
     beds: 6,
@@ -158,7 +158,7 @@ export const testimonials: Testimonial[] = [
     id: '3',
     name: 'Michael Thornton',
     photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1974&auto=format&fit=crop',
-    text: 'I've purchased multiple investment properties through Dreamscape and have always been impressed with their professionalism and market insights. Truly a cut above other agencies.',
+    text: 'I\'ve purchased multiple investment properties through Dreamscape and have always been impressed with their professionalism and market insights. Truly a cut above other agencies.',
     rating: 4,
   },
 ];
