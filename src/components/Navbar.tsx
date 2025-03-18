@@ -2,7 +2,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Menu, X, Search } from 'lucide-react';
+import { Menu, X, Search, LogIn } from 'lucide-react';
+import { Button } from './ui/button';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -78,6 +79,12 @@ const Navbar = () => {
           <button className="flex items-center justify-center p-2 rounded-full hover:bg-black hover:bg-opacity-5 transition-all duration-200">
             <Search size={20} />
           </button>
+          <Link to="/login">
+            <Button variant="outline" size="sm" className="flex items-center gap-1">
+              <LogIn size={16} />
+              <span>Login</span>
+            </Button>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -119,6 +126,16 @@ const Navbar = () => {
               )}
             >
               Contact
+            </Link>
+            <Link 
+              to="/login" 
+              className={cn(
+                "px-2 py-2 rounded-md transition-colors flex items-center gap-2", 
+                isActive('/login') ? "bg-black bg-opacity-5 font-medium" : "hover:bg-black hover:bg-opacity-5"
+              )}
+            >
+              <LogIn size={18} />
+              Login
             </Link>
             <div className="pt-2 pb-1">
               <div className="relative">
