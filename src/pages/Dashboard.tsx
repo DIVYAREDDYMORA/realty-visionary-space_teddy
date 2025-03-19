@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -27,12 +26,14 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WalletButton from '@/components/WalletButton';
 import { walletOptions, connectWallet } from '@/lib/walletUtils';
+import { useUser } from '@/contexts/UserContext';
 
 const Dashboard = () => {
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const { user, connectWallet, disconnectWallet } = useUser();
   const [isLoadingAssets, setIsLoadingAssets] = useState(false);
   
-  // Mock data
+  const walletAddress = user?.walletAddress || null;
+  
   const mockUser = {
     name: 'John Doe',
     email: 'john.doe@example.com',
@@ -61,7 +62,6 @@ const Dashboard = () => {
     setIsLoadingAssets(true);
     try {
       const address = await connectWallet(walletType as any);
-      setWalletAddress(address);
       
       // Simulate loading NFT assets
       setTimeout(() => {
@@ -76,8 +76,7 @@ const Dashboard = () => {
   };
   
   const handleDisconnect = () => {
-    setWalletAddress(null);
-    toast.success("Wallet disconnected successfully");
+    disconnectWallet();
   };
 
   return (
@@ -92,14 +91,14 @@ const Dashboard = () => {
               <div className="bg-card rounded-lg border p-4">
                 <div className="flex items-center space-x-3 pb-4 mb-4 border-b">
                   <Avatar>
-                    <AvatarImage src="" />
+                    <AvatarImage src={user?.profileImage || ""} />
                     <AvatarFallback className="bg-primary/10">
-                      {mockUser.name.split(' ').map(n => n[0]).join('')}
+                      {user?.name.split(' ').map(n => n[0]).join('') || "U"}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <h2 className="font-medium">{mockUser.name}</h2>
-                    <p className="text-xs text-muted-foreground">{mockUser.email}</p>
+                    <h2 className="font-medium">{user?.name || "User"}</h2>
+                    <p className="text-xs text-muted-foreground">{user?.email || "user@example.com"}</p>
                   </div>
                 </div>
                 
@@ -136,7 +135,7 @@ const Dashboard = () => {
               <div>
                 <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
                 <p className="text-muted-foreground">
-                  Welcome back, {mockUser.name.split(' ')[0]}!
+                  Welcome back, {user?.name.split(' ')[0] || "User"}!
                 </p>
               </div>
               

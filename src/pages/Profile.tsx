@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,6 +18,7 @@ import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { useUser } from '@/contexts/UserContext';
 
 const profileFormSchema = z.object({
   name: z.string().min(2, {
@@ -30,38 +30,30 @@ const profileFormSchema = z.object({
 });
 
 const Profile = () => {
+  const { user, updateUser, connectWallet, disconnectWallet } = useUser();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-
-  // Mock user data (in a real app, this would come from an API or context)
-  const userData = {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    role: 'buyer',
-    walletAddress: '0x1234...5678',
-    bio: '',
-    website: '',
-    phone: '',
-  };
+  const [profileImage, setProfileImage] = useState<string | null>(user?.profileImage || null);
 
   const form = useForm<z.infer<typeof profileFormSchema>>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      name: userData.name,
-      bio: userData.bio,
-      website: userData.website,
-      phone: userData.phone,
+      name: user?.name || "",
+      bio: user?.bio || "",
+      website: user?.website || "",
+      phone: user?.phone || "",
     },
   });
 
   const onSubmit = (values: z.infer<typeof profileFormSchema>) => {
     setIsSaving(true);
     
-    // Simulate API call
     setTimeout(() => {
-      console.log('Updated profile:', values);
-      toast.success('Profile updated successfully');
+      updateUser({
+        ...values,
+        profileImage
+      });
+      
       setIsSaving(false);
       setIsEditing(false);
     }, 1500);
@@ -74,6 +66,7 @@ const Profile = () => {
       reader.onload = (e) => {
         const result = e.target?.result as string;
         setProfileImage(result);
+        updateUser({ profileImage: result });
         toast.success('Profile picture updated');
       };
       reader.readAsDataURL(file);
@@ -92,7 +85,7 @@ const Profile = () => {
                 <Avatar className="h-24 w-24 border-2 border-primary/10">
                   <AvatarImage src={profileImage || ''} />
                   <AvatarFallback className="text-lg bg-primary/10">
-                    {userData.name.split(' ').map(n => n[0]).join('')}
+                    {user?.name.split(' ').map(n => n[0]).join('') || "U"}
                   </AvatarFallback>
                 </Avatar>
                 <label 
@@ -111,20 +104,20 @@ const Profile = () => {
               </div>
               
               <div className="space-y-1 text-center md:text-left">
-                <h1 className="text-2xl font-bold">{userData.name}</h1>
+                <h1 className="text-2xl font-bold">{user?.name || "User"}</h1>
                 <div className="flex flex-col gap-1 text-sm text-muted-foreground">
                   <div className="flex items-center justify-center md:justify-start gap-1.5">
                     <Mail size={14} />
-                    <span>{userData.email}</span>
+                    <span>{user?.email || "user@example.com"}</span>
                   </div>
                   <div className="flex items-center justify-center md:justify-start gap-1.5">
                     <User size={14} />
-                    <span className="capitalize">{userData.role}</span>
+                    <span className="capitalize">{user?.role || "user"}</span>
                   </div>
-                  {userData.walletAddress && (
+                  {user?.walletAddress && (
                     <div className="flex items-center justify-center md:justify-start gap-1.5">
                       <Wallet size={14} />
-                      <span className="font-mono">{userData.walletAddress}</span>
+                      <span className="font-mono">{user.walletAddress}</span>
                     </div>
                   )}
                 </div>

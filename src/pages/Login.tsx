@@ -1,11 +1,12 @@
 
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { useUser } from '@/contexts/UserContext';
 
 import { Button } from "@/components/ui/button";
 import {
@@ -29,6 +30,14 @@ const formSchema = z.object({
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const { login, isAuthenticated } = useUser();
+  const navigate = useNavigate();
+
+  // If user is already authenticated, redirect to profile
+  if (isAuthenticated) {
+    navigate('/profile');
+    return null;
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -41,7 +50,19 @@ const Login = () => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // In a real app, this would call an authentication API
     console.log(values);
-    toast.success("Login successful!");
+    
+    // Simulate successful login
+    // In a real app, you would validate credentials against a backend
+    const mockUserData = {
+      name: "John Doe",
+      email: values.email,
+      role: "buyer" as const,
+      walletAddress: null,
+      profileImage: null,
+    };
+    
+    login(mockUserData);
+    // Navigate happens in the login function
   }
 
   return (

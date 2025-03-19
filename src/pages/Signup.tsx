@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,6 +23,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WalletButton from '@/components/WalletButton';
 import { walletOptions } from '@/lib/walletUtils';
+import { useUser } from '@/contexts/UserContext';
 
 const userRoles = [
   { id: "buyer", label: "Buyer" },
@@ -58,6 +58,12 @@ const Signup = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [showWalletOptions, setShowWalletOptions] = useState(false);
+  const { login, isAuthenticated } = useUser();
+
+  if (isAuthenticated) {
+    navigate('/profile');
+    return null;
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -73,20 +79,25 @@ const Signup = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // In a real app, this would call an API to create a user
     console.log({
       ...values,
       walletAddress: walletAddress || undefined,
     });
     
-    // Show loading toast
     const loadingToast = toast.loading("Creating your account...");
     
-    // Simulate API call
     setTimeout(() => {
       toast.dismiss(loadingToast);
-      toast.success("Account created successfully! Verification email sent.");
-      navigate("/login");
+      
+      const userData = {
+        name: values.name,
+        email: values.email,
+        role: values.role,
+        walletAddress: walletAddress,
+        profileImage: null,
+      };
+      
+      login(userData);
     }, 2000);
   }
 
@@ -109,7 +120,6 @@ const Signup = () => {
             </p>
           </div>
 
-          {/* Wallet Connection Section */}
           <div className="bg-muted/50 rounded-lg p-4">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
@@ -348,7 +358,7 @@ const Signup = () => {
                   fill="#4285F4"
                 />
                 <path
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23 17.45 20.53 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                   fill="#34A853"
                 />
                 <path
