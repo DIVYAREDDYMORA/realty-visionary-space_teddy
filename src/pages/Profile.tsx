@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -235,30 +236,30 @@ const Profile = () => {
                 <dl className="space-y-4">
                   <div>
                     <dt className="text-sm font-medium text-muted-foreground">Full Name</dt>
-                    <dd className="mt-1">{userData.name}</dd>
+                    <dd className="mt-1">{user?.name || "Not provided"}</dd>
                   </div>
                   
                   <div>
                     <dt className="text-sm font-medium text-muted-foreground">Email</dt>
-                    <dd className="mt-1">{userData.email}</dd>
+                    <dd className="mt-1">{user?.email || "Not provided"}</dd>
                   </div>
                   
                   <div>
                     <dt className="text-sm font-medium text-muted-foreground">Role</dt>
-                    <dd className="mt-1 capitalize">{userData.role}</dd>
+                    <dd className="mt-1 capitalize">{user?.role || "Not provided"}</dd>
                   </div>
                   
-                  {userData.walletAddress && (
+                  {user?.walletAddress && (
                     <div>
                       <dt className="text-sm font-medium text-muted-foreground">Wallet Address</dt>
-                      <dd className="mt-1 font-mono text-sm">{userData.walletAddress}</dd>
+                      <dd className="mt-1 font-mono text-sm">{user?.walletAddress}</dd>
                     </div>
                   )}
                   
-                  {userData.bio && (
+                  {user?.bio && (
                     <div>
                       <dt className="text-sm font-medium text-muted-foreground">Bio</dt>
-                      <dd className="mt-1">{userData.bio}</dd>
+                      <dd className="mt-1">{user?.bio}</dd>
                     </div>
                   )}
                 </dl>
